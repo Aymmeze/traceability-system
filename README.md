@@ -37,11 +37,6 @@ System umożliwia pełne śledzenie genealogii partii leków (Traceability) zgod
 
 6. Otwórz przeglądarkę: http://127.0.0.1:8000/
 
-## Dane Logowania (Panel Admina)
-
-- **Adres:** http://127.0.0.1:8000/admin/
-- **Login:** piotrkryzinski
-- **Hasło:** admin123
 
 ## Scenariusz Testowy (Sprawdzenie Traceability)
 
