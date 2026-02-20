@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>System Traceability</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">🔍 System Śledzenia Partii (Traceability)</h3>
+        </div>
+        <div class="card-body">
+          <form method="GET" class="d-flex gap-2 mb-4">
+            <input
+              type="text"
+              name="lot"
+              class="form-control form-control-lg"
+              placeholder="Wpisz numer serii (np. SERIA-TAB-2025)..."
+              value="{{ query|default:'' }}"
+            />
+            <button type="submit" class="btn btn-dark btn-lg">Szukaj</button>
+          </form>
+
+          {% if query and not batch %}
+          <div class="alert alert-danger">
+            Nie znaleziono partii o numerze: <strong>{{ query }}</strong>
+          </div>
+          {% endif %} {% if batch %}
+          <div class="alert alert-success">
+            <h4 class="alert-heading">{{ batch.material.name }}</h4>
+            <p>
+              Numer LOT: <strong>{{ batch.lot_number }}</strong> | Status:
+              <strong>{{ batch.get_status_display }}</strong>
+            </p>
+            <hr />
+            <p class="mb-0">
+              <p class="mb-0">Data Produkcji: {{ batch.manufacturing_date|date:"d.m.Y" }} | Data Ważności: {{ batch.expiry_date|date:"d.m.Y" }}</p>
+            </p>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="card border-info">
+                <div class="card-header bg-info text-dark">
+                  📉 Genealogia Wstecz (Składniki)
+                </div>
+                <ul class="list-group list-group-flush">
+                  {% for item in ingredients %}
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <strong>{{ item.name }}</strong><br />
+                      <small class="text-muted">LOT: {{ item.lot }}</small>
+                    </div>
+                    <span class="badge bg-primary rounded-pill"
+                      >{{ item.qty }} kg</span
+                    >
+                  </li>
+                  {% empty %}
+                  <li class="list-group-item text-muted">
+                    To jest surowiec (brak składników).
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                  📈 Genealogia W Przód (Użycie)
+                </div>
+                <ul class="list-group list-group-flush">
+                  {% for item in products %}
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <strong>{{ item.name }}</strong><br />
+                      <small class="text-muted">LOT: {{ item.lot }}</small>
+                    </div>
+                    <span class="badge bg-primary rounded-pill"
+                      >{{ item.qty }} used</span
+                    >
+                  </li>
+                  {% empty %}
+                  <li class="list-group-item text-muted">
+                    Jeszcze nie użyto w produkcji.
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
